@@ -1,29 +1,38 @@
 package br.com.alura.tdd.service;
 
 import br.com.alura.tdd.modelo.Funcionario;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BonusServiceTest {
 
+    BonusService service;
+
+    @BeforeEach
+    void setup(){
+        this.service = new BonusService();
+    }
+
     @Test
     void bonusDeveriaSerZeroParaFuncionarioComSalarioMuitoAlto() {
-        BonusService service = new BonusService();
-        BigDecimal bonus = service.calcularBonus(
-                new Funcionario(
-                        "Nome do funcionário", LocalDate.now(), new BigDecimal("25000")
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> service.calcularBonus(
+                        new Funcionario(
+                                "Nome do funcionário", LocalDate.now(), new BigDecimal("25000")
+                        )
                 )
         );
-        assertEquals(new BigDecimal("0.00"), bonus);
     }
 
     @Test
     void bonusDeveriaSer10PorCentoDoSalario() {
-        BonusService service = new BonusService();
         BigDecimal bonus = service.calcularBonus(
                 new Funcionario(
                         "Nome do funcionário", LocalDate.now(), new BigDecimal("2500")
@@ -34,7 +43,6 @@ class BonusServiceTest {
 
     @Test
     void bonusDeveriaSer10PorCentoParaSalarioDoExatamente10000() {
-        BonusService service = new BonusService();
         BigDecimal bonus = service.calcularBonus(
                 new Funcionario(
                         "Nome do funcionário", LocalDate.now(), new BigDecimal("10000")
